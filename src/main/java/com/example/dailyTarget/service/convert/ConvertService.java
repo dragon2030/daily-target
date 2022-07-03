@@ -1,6 +1,7 @@
 package com.example.dailyTarget.service.convert;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: bigDragon
@@ -13,4 +14,7 @@ public interface ConvertService {
 
     //获取当天0点的时间
     Date getTodayZeroTime();
+
+    //获取最后记录天到今天所有的中间天数（不含最后记录天，含今天）
+    List<Date> getDaysTodayUntilLastRecordDay(Date lastRecordDate);
 }

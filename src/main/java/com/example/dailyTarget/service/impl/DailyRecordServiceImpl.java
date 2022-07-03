@@ -1,6 +1,7 @@
 package com.example.dailyTarget.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dailyTarget.dto.EditDailyRecordDto;
@@ -50,22 +51,34 @@ public class DailyRecordServiceImpl extends ServiceImpl<DailyRecordMapper, Daily
         Map<String, String> planTargetMap = new HashMap<>(planTargets.length);
         String weekStr;
         String detailStr;
-        for(String planTarget:planTargets){
-            //例如[1]1、运动60分钟。2、12点前睡觉。3、学习一小时。||[2]1、运动60分钟。2、12点前睡觉。3、学习一小时。
+        for(String planTarget : planTargets){
+            //例如[星期一]1、运动60分钟。2、12点前睡觉。3、学习一小时。||[星期二]1、运动60分钟。2、12点前睡觉。3、学习一小时。
             weekStr = planTarget.substring(1,4);
             detailStr = planTarget.substring(5);
             planTargetMap.put(weekStr, detailStr);
         }
 
-        DailyRecord dailyRecord = new DailyRecord();
-        dailyRecord.setPlanTargetId(planTargetEntity.getId());
-        dailyRecord.setStatisticsDate(convertService.getTodayZeroTime());
-        String weekDayName = convertService.getWeekDayName(null);
-        String dailyPlanTarget = planTargetMap.get(weekDayName);
-        dailyRecord.setPlanTargetDes(dailyPlanTarget);
-        dailyRecord.setPlanTargetAchievement(dailyPlanTarget);
-        dailyRecord.setCreateTime(new Date());
-        this.save(dailyRecord);
+        // 获取上一次日记记录时间到今天，所有需要生成记录的日期。通常情况下为1天，如果之前没有生产就带上没生成的记录
+        DailyRecord lastDailyRecord =
+                new LambdaQueryChainWrapper<>(dailyRecordMapper).orderByDesc(DailyRecord::getStatisticsDate).list().get(0);
+        List<Date> daysTodayUntilLastRecordDate = convertService.getDaysTodayUntilLastRecordDay(lastDailyRecord.getStatisticsDate());
+
+        //所有需要产生日记的date
+        for(Date recordDate : daysTodayUntilLastRecordDate){
+            //插入日记记录表
+            DailyRecord dailyRecord = new DailyRecord();
+            dailyRecord.setPlanTargetId(planTargetEntity.getId());
+            dailyRecord.setStatisticsDate(recordDate);
+
+            //获取当天是周几
+            String weekDayName = convertService.getWeekDayName(recordDate);
+            String dailyPlanTarget = planTargetMap.get(weekDayName);
+            dailyRecord.setPlanTargetDes(dailyPlanTarget);
+            dailyRecord.setDayOfWeek(weekDayName);
+
+            dailyRecord.setCreateTime(new Date());
+            this.save(dailyRecord);
+        }
     }
 
     //编辑每日记录

@@ -49,7 +49,7 @@ public class DailyRecord {
     private String remark;
 
     @ApiModelProperty("周几")
-    private String dayInWeek;
+    private String dayOfWeek;
 
     @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

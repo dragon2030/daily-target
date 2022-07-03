@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: bigDragon
@@ -50,5 +47,41 @@ public class ConvertServiceImpl implements ConvertService {
             e.printStackTrace();
         }
         return todayZeroTime;
+    }
+
+    //获取最后记录天到今天所有的中间天数（不含最后记录天，含今天）
+    @Override
+    public List<Date> getDaysTodayUntilLastRecordDay(Date lastRecordDate){
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar instance = Calendar.getInstance();
+        List<Date> dateList = new ArrayList<>();
+        //记录时间，00:00:00
+        Date recordDate = null;
+        try {
+            recordDate = simpleDateFormat.parse(simpleDateFormat.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //添加当天记录时间
+        dateList.add(recordDate);
+
+        while(true){
+            //当天记录时间不断前推一天，直到小于等于最后记录天
+            instance= Calendar.getInstance();
+            instance.setTime(recordDate);
+            instance.add(Calendar.DATE, -1);
+            Date lastTimeRecordDate = instance.getTime();
+            if(lastTimeRecordDate.compareTo(lastRecordDate) <= 0){
+                break;
+            } else {
+                //计算出前推时间在数据库上次记录之后，还得继续前推
+                dateList.add(lastTimeRecordDate);
+                recordDate = lastTimeRecordDate;
+            }
+
+        }
+        return dateList;
+
     }
 }
