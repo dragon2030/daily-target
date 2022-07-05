@@ -56,29 +56,39 @@ public class ConvertServiceImpl implements ConvertService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar instance = Calendar.getInstance();
         List<Date> dateList = new ArrayList<>();
-        //记录时间，00:00:00
-        Date recordDate = null;
+        //计算得出的每个上一天的00:00:00的时间，也是要录入的操作日期时间
+        Date lastTimeShouldRecordDate = null;
         try {
-            recordDate = simpleDateFormat.parse(simpleDateFormat.format(date));
+            lastTimeShouldRecordDate = simpleDateFormat.parse(simpleDateFormat.format(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         //添加当天记录时间
-        dateList.add(recordDate);
+//        dateList.add(recordDate);
+//        if(recordDate.compareTo(lastRecordDate) == 0){
+//            throw new RuntimeException("已经生成过当日记录");
+//        }
 
         while(true){
-            //当天记录时间不断前推一天，直到小于等于最后记录天
-            instance= Calendar.getInstance();
-            instance.setTime(recordDate);
-            instance.add(Calendar.DATE, -1);
-            Date lastTimeRecordDate = instance.getTime();
-            if(lastTimeRecordDate.compareTo(lastRecordDate) <= 0){
+            //上次应该记录时间小于等于数据的最后记录时间，代表计算的上次应该记录天已记录，中断循环，否则继续判断上一天
+            if(lastTimeShouldRecordDate.compareTo(lastRecordDate) <= 0){
                 break;
             } else {
                 //计算出前推时间在数据库上次记录之后，还得继续前推
-                dateList.add(lastTimeRecordDate);
-                recordDate = lastTimeRecordDate;
+                dateList.add(lastTimeShouldRecordDate);
             }
+            //当天记录时间不断前推一天，直到小于等于最后记录天
+            instance= Calendar.getInstance();
+            instance.setTime(lastTimeShouldRecordDate);
+            instance.add(Calendar.DATE, -1);
+            lastTimeShouldRecordDate = instance.getTime();
+//            if(lastTimeRecordDate.compareTo(lastRecordDate) <= 0){
+//                break;
+//            } else {
+//                //计算出前推时间在数据库上次记录之后，还得继续前推
+//                dateList.add(lastTimeRecordDate);
+//                recordDate = lastTimeRecordDate;
+//            }
 
         }
         return dateList;

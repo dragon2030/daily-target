@@ -21,5 +21,5 @@ public interface IDailyRecordService extends IService<DailyRecord> {
     void editRecord(EditDailyRecordDto dto);
 
     //获取日记及目标全部记录
-    List<DailyRecord> getList();
+    List<DailyRecordVo> getList();
 }

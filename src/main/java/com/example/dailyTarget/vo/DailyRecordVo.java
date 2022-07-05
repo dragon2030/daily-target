@@ -21,18 +21,21 @@ import java.util.Date;
 public class DailyRecordVo {
 
     @ApiModelProperty("主键id")
-    private String dailyRecordId;
+    private String id;
 
-    @ApiModelProperty("目标计划id")
-    private String planTargetId;
+//    @ApiModelProperty("目标计划id")
+//    private String planTargetId;
 
     @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty("统计日期")
     private Date statisticsDate;
 
-    @ApiModelProperty("目标计划内容")
-    private String planTargetDes;
+    @ApiModelProperty("周几")
+    private String dayOfWeek;
+
+//    @ApiModelProperty("目标计划内容")
+//    private String planTargetDes;
 
     @ApiModelProperty("目标完成情况")
     private String planTargetAchievement;
@@ -43,28 +46,28 @@ public class DailyRecordVo {
     @ApiModelProperty("日记")
     private String diaryRecordDetail;
 
-    @ApiModelProperty("备注")
-    private String remark;
+//    @ApiModelProperty("备注")
+//    private String remark;
+//
+//    @ApiModelProperty("远期目标对照")
+//    private String longTermGoal;
+//
+//    @ApiModelProperty("计划感想")
+//    private String targetThoughts;
 
-    @ApiModelProperty("远期目标对照")
-    private String longTermGoal;
-
-    @ApiModelProperty("计划感想")
-    private String targetThoughts;
-
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty("创建时间")
-    private Date createTime;
-
-    @ApiModelProperty("创建人")
-    private String createBy;
-
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty("更新时间")
-    private Date updateTime;
-
-    @ApiModelProperty("更新人")
-    private String updateBy;
+//    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+//    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+//    @ApiModelProperty("创建时间")
+//    private Date createTime;
+//
+//    @ApiModelProperty("创建人")
+//    private String createBy;
+//
+//    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+//    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+//    @ApiModelProperty("更新时间")
+//    private Date updateTime;
+//
+//    @ApiModelProperty("更新人")
+//    private String updateBy;
 }

@@ -91,10 +91,17 @@ public class DailyRecordServiceImpl extends ServiceImpl<DailyRecordMapper, Daily
 
     //获取日记及目标全部记录
     @Override
-    public List<DailyRecord> getList(){
+    public List<DailyRecordVo> getList(){
         //获取日记表
         List<DailyRecord> dailyRecords =
                 new LambdaQueryChainWrapper<>(dailyRecordMapper).orderByDesc(DailyRecord::getCreateTime).list();
-        return dailyRecords;
+        List<DailyRecordVo> vos = new ArrayList<>();
+        dailyRecords.forEach(entity -> {
+            DailyRecordVo vo = new DailyRecordVo();
+            BeanUtil.copyProperties(entity, vo);
+            vos.add(vo);
+        });
+
+        return vos;
     }
 }
