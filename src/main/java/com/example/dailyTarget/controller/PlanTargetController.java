@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.example.dailyTarget.entity.DailyRecord;
 import com.example.dailyTarget.entity.PlanTarget;
 import com.example.dailyTarget.service.IPlanTargetService;
+import com.example.dailyTarget.vo.PlanTargetVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +29,8 @@ public class PlanTargetController {
 
     @ApiOperation("获取日记及目标全部记录")
     @GetMapping(value = "/getList")
-    public List<PlanTarget> getList(){
-        List<PlanTarget> list = planTargetService.getList();
+    public List<PlanTargetVo> getList(){
+        List<PlanTargetVo> list = planTargetService.getList();
         return list;
     }
 

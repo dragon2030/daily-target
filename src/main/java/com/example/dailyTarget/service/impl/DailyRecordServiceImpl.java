@@ -46,17 +46,18 @@ public class DailyRecordServiceImpl extends ServiceImpl<DailyRecordMapper, Daily
         //生成当日目标日记记录
         //解析获取当天的计划任务
         String planTargetDes = planTargetEntity.getPlanTargetDes();
-        String[] planTargets = planTargetDes.split("\\|\\|");
-
-        Map<String, String> planTargetMap = new HashMap<>(planTargets.length);
-        String weekStr;
-        String detailStr;
-        for(String planTarget : planTargets){
-            //例如[星期一]1、运动60分钟。2、12点前睡觉。3、学习一小时。||[星期二]1、运动60分钟。2、12点前睡觉。3、学习一小时。
-            weekStr = planTarget.substring(1,4);
-            detailStr = planTarget.substring(5);
-            planTargetMap.put(weekStr, detailStr);
-        }
+//        String[] planTargets = planTargetDes.split("\\|\\|");
+//
+//        Map<String, String> planTargetMap = new HashMap<>(planTargets.length);
+//        String weekStr;
+//        String detailStr;
+//        for(String planTarget : planTargets){
+//            //例如[星期一]1、运动60分钟。2、12点前睡觉。3、学习一小时。||[星期二]1、运动60分钟。2、12点前睡觉。3、学习一小时。
+//            weekStr = planTarget.substring(1,4);
+//            detailStr = planTarget.substring(5);
+//            planTargetMap.put(weekStr, detailStr);
+//        }
+        Map<String, String> planTargetMap = convertService.parsePlanTargetDesToMap(planTargetDes);
 
         // 获取上一次日记记录时间到今天，所有需要生成记录的日期。通常情况下为1天，如果之前没有生产就带上没生成的记录
         DailyRecord lastDailyRecord =

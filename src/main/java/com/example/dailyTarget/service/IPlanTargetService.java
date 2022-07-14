@@ -3,6 +3,7 @@ package com.example.dailyTarget.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.dailyTarget.entity.DailyRecord;
 import com.example.dailyTarget.entity.PlanTarget;
+import com.example.dailyTarget.vo.PlanTargetVo;
 
 import java.util.List;
 
@@ -14,6 +15,6 @@ import java.util.List;
 public interface IPlanTargetService extends IService<PlanTarget> {
 
     //获取日记及目标全部记录
-    List<PlanTarget> getList();
+    List<PlanTargetVo> getList();
 
 }

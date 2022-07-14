@@ -26,4 +26,10 @@ public class EditDailyRecordDto {
 
     @ApiModelProperty("日记")
     private String diaryRecordDetail;
+
+    @ApiModelProperty("日目标完成百分比")
+    private Integer dayPercentComplete;
+
+    @ApiModelProperty("周目标完成百分比")
+    private Integer weekPercentComplete;
 }

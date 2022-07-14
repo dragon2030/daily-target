@@ -2,6 +2,7 @@ package com.example.dailyTarget.service.convert;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: bigDragon
@@ -17,4 +18,9 @@ public interface ConvertService {
 
     //获取最后记录天到今天所有的中间天数（不含最后记录天，含今天）
     List<Date> getDaysTodayUntilLastRecordDay(Date lastRecordDate);
+
+//    解析目标计划内容返回map
+    Map<String,String> parsePlanTargetDesToMap(String planTargetDes);
+//    解析目标计划内容返回List
+    List<String> parsePlanTargetDesToList(String planTargetDes);
 }
