@@ -2,6 +2,7 @@ package com.example.dailyTarget.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.dailyTarget.dto.EditDailyRecordDto;
@@ -88,6 +89,7 @@ public class DailyRecordServiceImpl extends ServiceImpl<DailyRecordMapper, Daily
         DailyRecord dailyRecord = new DailyRecord();
         BeanUtil.copyProperties(dto, dailyRecord);
         this.updateById(dailyRecord);
+
     }
 
     //获取日记及目标全部记录
@@ -95,7 +97,7 @@ public class DailyRecordServiceImpl extends ServiceImpl<DailyRecordMapper, Daily
     public List<DailyRecordVo> getList(){
         //获取日记表
         List<DailyRecord> dailyRecords =
-                new LambdaQueryChainWrapper<>(dailyRecordMapper).orderByDesc(DailyRecord::getCreateTime).list();
+                new LambdaQueryChainWrapper<>(dailyRecordMapper).orderByDesc(DailyRecord::getStatisticsDate).list();
         List<DailyRecordVo> vos = new ArrayList<>();
         dailyRecords.forEach(entity -> {
             DailyRecordVo vo = new DailyRecordVo();

@@ -17,11 +17,14 @@ public class PlanTargetVo {
 //    @ApiModelProperty("目标计划内容（目标项间以“1、XXX。2、XXX。”格式，方便后期io截取统计）")
 //    private String planTargetDes;
 
-    @ApiModelProperty("目标计划内容list）")
+    @ApiModelProperty("目标计划内容list")
     private List<String> planTargetList;
 
-    @ApiModelProperty("远期目标对照")
-    private String longTermGoal;
+//    @ApiModelProperty("远期目标对照")
+//    private String longTermGoal;
+
+    @ApiModelProperty("远期目标对照list")
+    private List<String> longTermGoalList;
 
     @ApiModelProperty("计划感想")
     private String targetThoughts;
@@ -37,8 +40,11 @@ public class PlanTargetVo {
     @ApiModelProperty("创建时间")
     private String createTime;
 
-    @ApiModelProperty("改变习惯")
-    private String changeHabit;
+//    @ApiModelProperty("改变习惯")
+//    private String changeHabit;
+
+    @ApiModelProperty("改变习惯list")
+    private List<String> changeHabitList;
 
 //    @ApiModelProperty("计划目标核心项")
 //    private String targetCoreItems;

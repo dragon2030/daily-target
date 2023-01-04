@@ -32,7 +32,7 @@ public class DailyRecordController {
     private DailyRecordMapper dailyRecordMapper;
 
 
-    @ApiOperation("获取日记及目标全部记录")
+    @ApiOperation("获取日记全部记录")
     @GetMapping(value = "/getList")
     public List<DailyRecordVo> getList(){
         List<DailyRecordVo> list = dailyRecordService.getList();

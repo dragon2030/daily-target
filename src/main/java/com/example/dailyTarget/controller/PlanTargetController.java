@@ -27,7 +27,7 @@ public class PlanTargetController {
     @Resource
     IPlanTargetService planTargetService;
 
-    @ApiOperation("获取日记及目标全部记录")
+    @ApiOperation("获取计划目标全部记录")
     @GetMapping(value = "/getList")
     public List<PlanTargetVo> getList(){
         List<PlanTargetVo> list = planTargetService.getList();

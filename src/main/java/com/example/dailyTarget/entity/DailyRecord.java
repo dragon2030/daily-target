@@ -52,10 +52,10 @@ public class DailyRecord {
     private String dayOfWeek;
 
     @ApiModelProperty("日目标完成百分比")
-    private Integer dayPercentComplete;
+    private String dayPercentComplete;
 
     @ApiModelProperty("周目标完成百分比")
-    private Integer weekPercentComplete;
+    private String weekPercentComplete;
 
     @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

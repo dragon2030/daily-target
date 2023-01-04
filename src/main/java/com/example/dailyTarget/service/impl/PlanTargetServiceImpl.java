@@ -39,11 +39,20 @@ public class PlanTargetServiceImpl extends ServiceImpl<PlanTargetMapper, PlanTar
             PlanTargetVo planTargetVo = new PlanTargetVo();
             BeanUtil.copyProperties(planTarget, planTargetVo);
 
+            //目标计划内容
             List<String> planTargetList = convertService.parsePlanTargetDesToList(planTarget.getPlanTargetDes());
             planTargetVo.setPlanTargetList(planTargetList);
 
+            //改变习惯
+            List<String> changeHabitList = convertService.parsePlanTargetDesToList(planTarget.getChangeHabit());
+            planTargetVo.setChangeHabitList(changeHabitList);
+
+            //计划目标核心项
             List<String> targetCoreItemList = convertService.parsePlanTargetDesToList(planTarget.getTargetCoreItems());
             planTargetVo.setTargetCoreItemList(targetCoreItemList);
+
+            List<String> longTermGoalList = convertService.parsePlanTargetDesToList(planTarget.getLongTermGoal());
+            planTargetVo.setLongTermGoalList(longTermGoalList);
 
             planTargetVos.add(planTargetVo);
         }
