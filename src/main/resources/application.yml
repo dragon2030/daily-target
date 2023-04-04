@@ -1,10 +1,12 @@
-
-
+server:
+    #port: 8081
+    port: 8080
 spring:
     datasource:
         username: root
         password: root
-        url: jdbc:mysql://localhost:3306/daily_target?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+        #url: jdbc:mysql://localhost:3306/daily_target?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://101.43.58.178:3306/daily_target?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
 #        driver-class-name: com.mysql.jdbc.Driver
         driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis:
@@ -23,7 +25,7 @@ mybatis-plus:
             #主键类型 AUTO:"数据库ID自增" INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
             id-type: auto
             #字段策略 IGNORED:"忽略判断"  NOT_NULL:"非 NULL 判断")  NOT_EMPTY:"非空判断"
-            field-strategy: NOT_EMPTY
+            # field-strategy: NOT_EMPTY
             #数据库类型
             db-type: MYSQL
     configuration:
@@ -32,6 +34,5 @@ mybatis-plus:
         # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
         call-setters-on-nulls: true
         # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
-#        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
-server:
-    port: 8081
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
+

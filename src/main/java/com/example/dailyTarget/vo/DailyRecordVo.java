@@ -34,11 +34,11 @@ public class DailyRecordVo {
     @ApiModelProperty("周几")
     private String dayOfWeek;
 
-//    @ApiModelProperty("目标计划内容")
-//    private String planTargetDes;
+    @ApiModelProperty("目标计划内容")
+    private String planTargetDes;
 
-    @ApiModelProperty("目标完成情况")
-    private String planTargetAchievement;
+//    @ApiModelProperty("目标完成情况")
+//    private String planTargetAchievement;
 
     @ApiModelProperty("人生感想")
     private String lifeFeeling;
@@ -46,11 +46,11 @@ public class DailyRecordVo {
     @ApiModelProperty("日记")
     private String diaryRecordDetail;
 
-    @ApiModelProperty("日目标完成百分比")
-    private String dayPercentComplete;
-
-    @ApiModelProperty("周目标完成百分比")
-    private String weekPercentComplete;
+//    @ApiModelProperty("日目标完成百分比")
+//    private String dayPercentComplete;
+//
+//    @ApiModelProperty("周目标完成百分比")
+//    private String weekPercentComplete;
 
 //    @ApiModelProperty("备注")
 //    private String remark;

@@ -1,6 +1,7 @@
 package com.example.dailyTarget.controller;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.example.dailyTarget.dto.DailyRecordDto;
 import com.example.dailyTarget.dto.EditDailyRecordDto;
 import com.example.dailyTarget.mapper.DailyRecordMapper;
 import com.example.dailyTarget.entity.DailyRecord;
@@ -40,18 +41,28 @@ public class DailyRecordController {
     }
 
     //生成每日记录
-    @ApiOperation("生成每日记录")
-    @GetMapping(value = "/addRecord")
-    public String addRecord(){
-        dailyRecordService.addRecord();
+//    @ApiOperation("生成每日记录")
+//    @GetMapping(value = "/addRecord")
+//    public String addRecord(){
+//        dailyRecordService.addRecord();
+//        return "SUCCESS";
+//    }
+
+    //每天的日记记录
+    //todo 指定某天 登录用户
+    @ApiOperation("每天的日记记录")
+    @GetMapping(value = "/dailyRecord")
+    public String dailyRecord(DailyRecordDto dailyRecordDto){
+        dailyRecordService.dailyRecord(dailyRecordDto);
         return "SUCCESS";
     }
 
+
     //编辑每日记录
-    @ApiOperation("编辑每日记录")
-    @GetMapping(value = "/editRecord")
-    public String editRecord(EditDailyRecordDto dto){
-        dailyRecordService.editRecord(dto);
-        return "SUCCESS";
-    }
+//    @ApiOperation("编辑每日记录")
+//    @GetMapping(value = "/editRecord")
+//    public String editRecord(EditDailyRecordDto dto){
+//        dailyRecordService.editRecord(dto);
+//        return "SUCCESS";
+//    }
 }

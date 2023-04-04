@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -25,13 +26,14 @@ public class DailyRecord {
     @ApiModelProperty("主键id")
     private String id;
 
+    @ApiModelProperty("统计日期")
+    private String statisticsDate;
+
     @ApiModelProperty("目标计划id")
     private String planTargetId;
 
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    @ApiModelProperty("统计日期")
-    private Date statisticsDate;
+//    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+//    @DateTimeFormat(pattern="yyyy-MM-dd")
 
     @ApiModelProperty("目标计划内容")
     private String planTargetDes;
@@ -73,4 +75,6 @@ public class DailyRecord {
     @ApiModelProperty("更新人")
     private String updateBy;
 
+    @ApiModelProperty("总积蓄金额")
+    private BigDecimal deposit;
 }

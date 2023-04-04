@@ -2,10 +2,13 @@ package com.example.dailyTarget.service.convert.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.example.dailyTarget.common.CommonValue;
+import com.example.dailyTarget.entity.DailyRecord;
 import com.example.dailyTarget.entity.PlanTarget;
 import com.example.dailyTarget.enums.StatusEnum;
+import com.example.dailyTarget.enums.TargetEnum;
 import com.example.dailyTarget.mapper.PlanTargetMapper;
 import com.example.dailyTarget.service.convert.ConvertService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import java.util.*;
  * @Description:
  */
 @Service
+@Slf4j
 public class ConvertServiceImpl implements ConvertService {
 
     @Override
@@ -154,5 +158,60 @@ public class ConvertServiceImpl implements ConvertService {
             planTargetList.add(planTarget);
         }
         return planTargetList;
+    }
+
+    //获取统计时间 yyyy-MM-dd
+    @Override
+    public String getStatisticsDate(Date date){
+        if(Objects.isNull(date)){
+            date = new Date();
+        }
+//        Date parse=date;
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String statisticsDate = simpleDateFormat.format(date);
+//            parse = simpleDateFormat.parse(format);
+
+        return statisticsDate;
+    }
+
+    @Override
+    //获取第一快(运动目标)/第二块(学习目标)/第三块(作息目标)
+    public String getPartTargetAchievement(DailyRecord originDateRecord, TargetEnum targetEnum){
+        if(Objects.isNull(originDateRecord)){
+            return "";
+        }
+        if(StringUtils.isBlank(originDateRecord.getPlanTargetAchievement())){
+            return "";
+        }
+        String returnTargetAchievement = "";
+        String planTargetAchievement = originDateRecord.getPlanTargetAchievement();
+        int oneIndexOf = planTargetAchievement.indexOf("1、");
+        int twoIndexOf = planTargetAchievement.indexOf("2、");
+        int threeIndexOf = planTargetAchievement.indexOf("3、");
+        switch (targetEnum){
+            case SPORT_TARGET:
+                if (oneIndexOf==-1){
+                    return "";
+                }else{
+                    returnTargetAchievement = planTargetAchievement.substring(0,twoIndexOf);
+                }
+                break;
+            case STUDY_TARGET:
+                if (twoIndexOf==-1){
+                    return "";
+                }else{
+                    returnTargetAchievement = planTargetAchievement.substring(twoIndexOf,threeIndexOf);
+                }
+                break;
+            case SLEEP_TARGET:
+                if (twoIndexOf==-1){
+                    return "";
+                }else{
+                    returnTargetAchievement = planTargetAchievement.substring(threeIndexOf);
+                }
+                break;
+        }
+        return returnTargetAchievement;
     }
 }
