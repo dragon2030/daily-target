@@ -3,7 +3,7 @@ USE daily_target;
 
 CREATE TABLE `daily_record` (
     `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-    `statistics_date` datetime DEFAULT NULL COMMENT '统计日期',
+    `statistics_date` varchar DEFAULT NULL COMMENT '统计日期',
     `plan_target_id` varchar(32) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '目标计划id',
     `plan_target_des` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '目标计划内容（目标项间以“1、XXX。2、XXX。”格式，方便后期io截取统计',
     `plan_target_achievement` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '目标完成情况（目标项间以“1、XXX。2、XXX。”格式，方便后期io截取统计。数字对应计划项。“99、原因”表示额外项和特殊原因）',

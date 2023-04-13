@@ -148,7 +148,11 @@ public class DailyRecordServiceImpl extends ServiceImpl<DailyRecordMapper, Daily
             }
         }
         //获取输入目标日的数据
-        DailyRecord originDateRecord = this.getByStatisticsDate(statisticsDate);
+        List<DailyRecord> dailyRecords = new LambdaQueryChainWrapper<>(dailyRecordMapper).list();
+        Map<String,DailyRecord> statisticsDateMap =
+                dailyRecords.stream().collect(Collectors.toMap(i->i.getStatisticsDate(), Function.identity(),(v1, v2)->v1));
+
+        DailyRecord originDateRecord = statisticsDateMap.containsKey(statisticsDate)?statisticsDateMap.get(statisticsDate):null;
         //目标完成情况 字段
         StringBuilder stringBuilder = new StringBuilder();
         if (StringUtils.isNotBlank(dailyRecordDto.getSportTarget())) {
@@ -170,13 +174,9 @@ public class DailyRecordServiceImpl extends ServiceImpl<DailyRecordMapper, Daily
         String planTargetAchievement = stringBuilder.toString();
 
         //新增/修改操作
-        List<DailyRecord> dailyRecords = new LambdaQueryChainWrapper<>(dailyRecordMapper).list();
-        Map<String,DailyRecord> statisticsDateMap =
-                dailyRecords.stream().collect(Collectors.toMap(i->i.getStatisticsDate(), Function.identity(),(v1, v2)->v1));
         if(statisticsDateMap.containsKey(statisticsDate)){//编辑
-            DailyRecord dailyRecord = statisticsDateMap.get(statisticsDate);
             LambdaUpdateWrapper<DailyRecord> updateWrapper = new LambdaUpdateWrapper<>();
-            updateWrapper.eq(DailyRecord::getId,dailyRecord.getId());
+            updateWrapper.eq(DailyRecord::getId,originDateRecord.getId());
             updateWrapper.set(DailyRecord::getPlanTargetAchievement,planTargetAchievement);
             updateWrapper.set(DailyRecord::getLifeFeeling,dailyRecordDto.getLifeFeeling());
             updateWrapper.set(DailyRecord::getDiaryRecordDetail,dailyRecordDto.getDiaryRecordDetail());
