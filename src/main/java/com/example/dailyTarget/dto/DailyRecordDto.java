@@ -11,7 +11,6 @@ import lombok.Data;
 @Data
 public class DailyRecordDto {
 
-
     @ApiModelProperty("人生感想")
     private String lifeFeeling;
 

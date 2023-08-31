@@ -3,6 +3,7 @@ package com.example.dailyTarget.controller;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.example.dailyTarget.dto.DailyRecordDto;
 import com.example.dailyTarget.dto.EditDailyRecordDto;
+import com.example.dailyTarget.dto.ExportDataQuery;
 import com.example.dailyTarget.mapper.DailyRecordMapper;
 import com.example.dailyTarget.entity.DailyRecord;
 import com.example.dailyTarget.service.IDailyRecordService;
@@ -65,4 +66,11 @@ public class DailyRecordController {
 //        dailyRecordService.editRecord(dto);
 //        return "SUCCESS";
 //    }
+    
+    //一周执行一次
+    @ApiOperation("导出日记全部记录")
+    @GetMapping(value = "/exportData")
+    public void exportData(ExportDataQuery exportDataQuery){
+        dailyRecordService.exportData(exportDataQuery);
+    }
 }

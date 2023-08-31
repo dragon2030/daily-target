@@ -2,16 +2,26 @@ package com.example.dailyTarget.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.dailyTarget.common.CommonValue;
 import com.example.dailyTarget.dto.DailyRecordDto;
+import com.example.dailyTarget.dto.DailyRecordExcel;
+import com.example.dailyTarget.dto.ExportDataQuery;
+import com.example.dailyTarget.entity.TargetItemDto;
 import com.example.dailyTarget.enums.TargetEnum;
 import com.example.dailyTarget.mapper.DailyRecordMapper;
 import com.example.dailyTarget.entity.DailyRecord;
 import com.example.dailyTarget.mapper.PlanTargetMapper;
 import com.example.dailyTarget.service.IDailyRecordService;
 import com.example.dailyTarget.service.convert.ConvertService;
+import com.example.dailyTarget.util.DateUtils;
+import com.example.dailyTarget.util.ExcelExportUtil;
+import com.example.dailyTarget.util.ExcelUtil;
 import com.example.dailyTarget.vo.DailyRecordVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -147,31 +157,19 @@ public class DailyRecordServiceImpl extends ServiceImpl<DailyRecordMapper, Daily
                 throw new RuntimeException("日期格式解析有误");
             }
         }
+        Date parseDateTime = null;
+        try {
+            parseDateTime = new SimpleDateFormat("yyyy-MM-dd").parse(statisticsDate);
+        } catch (ParseException e) {
+            log.error("日期解析失败");
+        }
         //获取输入目标日的数据
         List<DailyRecord> dailyRecords = new LambdaQueryChainWrapper<>(dailyRecordMapper).list();
         Map<String,DailyRecord> statisticsDateMap =
                 dailyRecords.stream().collect(Collectors.toMap(i->i.getStatisticsDate(), Function.identity(),(v1, v2)->v1));
 
         DailyRecord originDateRecord = statisticsDateMap.containsKey(statisticsDate)?statisticsDateMap.get(statisticsDate):null;
-        //目标完成情况 字段
-        StringBuilder stringBuilder = new StringBuilder();
-        if (StringUtils.isNotBlank(dailyRecordDto.getSportTarget())) {
-            stringBuilder.append("1、").append(dailyRecordDto.getSportTarget()).append("。");
-        }else if(Objects.isNull(originDateRecord)){//如果为null 把原本1、的内容添加进来
-            stringBuilder.append(convertService.getPartTargetAchievement(originDateRecord,TargetEnum.SPORT_TARGET));
-        }
-        if (StringUtils.isNotBlank(dailyRecordDto.getStudyTarget())) {
-            stringBuilder.append("2、").append(dailyRecordDto.getStudyTarget()).append("。");
-        }else if(Objects.isNull(originDateRecord)){//如果为null 把原本2、的内容添加进来
-            stringBuilder.append(convertService.getPartTargetAchievement(originDateRecord,TargetEnum.STUDY_TARGET));
-        }
-        if (StringUtils.isNotBlank(dailyRecordDto.getSleepTarget())) {
-            stringBuilder.append("3、").append(dailyRecordDto.getSleepTarget()).append("。");
-        }else if(Objects.isNull(originDateRecord)){//如果为null 把原本3、的内容添加进来
-            stringBuilder.append(convertService.getPartTargetAchievement(originDateRecord,TargetEnum.SLEEP_TARGET));
-        }
-
-        String planTargetAchievement = stringBuilder.toString();
+        String planTargetAchievement = convertService.generateNewPlanTargetAchievement(dailyRecordDto,originDateRecord);
 
         //新增/修改操作
         if(statisticsDateMap.containsKey(statisticsDate)){//编辑
@@ -182,17 +180,64 @@ public class DailyRecordServiceImpl extends ServiceImpl<DailyRecordMapper, Daily
             updateWrapper.set(DailyRecord::getDiaryRecordDetail,dailyRecordDto.getDiaryRecordDetail());
             updateWrapper.set(DailyRecord::getUpdateTime,new Date());
             dailyRecordMapper.update(null, updateWrapper);
-        }else{
+        }else{//新增
             DailyRecord dailyRecord = new DailyRecord();
             BeanUtil.copyProperties(dailyRecordDto,dailyRecord);
-            if(stringBuilder!=null && stringBuilder.length()>0){
+            if(StringUtils.isNotBlank(planTargetAchievement)){
                 dailyRecord.setPlanTargetAchievement(planTargetAchievement);
             }
             dailyRecord.setStatisticsDate(statisticsDate);
+            dailyRecord.setStatisticTime(parseDateTime);
+            
             String weekDayName = convertService.getWeekDayName(date);
             dailyRecord.setDayOfWeek(weekDayName);
             dailyRecord.setCreateTime(date);
             this.save(dailyRecord);
         }
+    }
+    
+    
+    @Override
+    public void exportData(ExportDataQuery exportDataQuery){
+
+        //当月数据，取出数据导出excel
+        Date startDate = null;
+        String monthFormatDate = null;
+        String dayFormatDate = null;
+        Date date = new Date();
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+            monthFormatDate = simpleDateFormat.format(date);
+            startDate = simpleDateFormat.parse(monthFormatDate);
+            
+            SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyyMMdd");
+            dayFormatDate = simpleDateFormat2.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //获取数据
+        List<DailyRecord> dailyRecords =
+                new LambdaQueryChainWrapper<>(dailyRecordMapper)
+                        .ge(DailyRecord::getStatisticTime,startDate)
+                        .orderByAsc(DailyRecord::getStatisticsDate)
+                        .list();
+        //转换为excel导出 每周之间会插入预计实际 小结 月末应该有月预计实际 小结 单独接口记录
+        List<DailyRecordExcel> dailyRecordExcels = new ArrayList<>();
+        for (DailyRecord dailyRecord : dailyRecords){
+            DailyRecordExcel dailyRecordExcel = new DailyRecordExcel();
+            BeanUtil.copyProperties(dailyRecord,dailyRecordExcel);
+            
+            String planTargetAchievement = dailyRecord.getPlanTargetAchievement();
+            if(StringUtils.isNotBlank(planTargetAchievement)){
+                TargetItemDto targetItemDto = JSON.parseObject(planTargetAchievement, TargetItemDto.class);
+                dailyRecordExcel.setSportTarget(targetItemDto.getSportTarget());
+                dailyRecordExcel.setStudyTarget(targetItemDto.getStudyTarget());
+                dailyRecordExcel.setSleepTarget(targetItemDto.getSleepTarget());
+            }
+            dailyRecordExcels.add(dailyRecordExcel);
+        }
+        
+        String reportName = monthFormatDate+"-"+dayFormatDate;
+        ExcelExportUtil.checkAndExport(reportName,"日记录表",DailyRecordExcel.class,dailyRecordExcels);
     }
 }

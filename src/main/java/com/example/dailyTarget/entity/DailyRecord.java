@@ -25,7 +25,8 @@ public class DailyRecord {
     @TableId(type = IdType.ASSIGN_ID)
     @ApiModelProperty("主键id")
     private String id;
-
+    @ApiModelProperty("统计时间")
+    private Date statisticTime;
     @ApiModelProperty("统计日期")
     private String statisticsDate;
 

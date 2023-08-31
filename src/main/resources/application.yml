@@ -1,12 +1,12 @@
 server:
     #port: 8081
-    port: 8080
+    port: 16021
 spring:
     datasource:
         username: root
-        password: root
+        password: Tiany151!@#$
         #url: jdbc:mysql://localhost:3306/daily_target?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
-        url: jdbc:mysql://101.43.58.178:3306/daily_target?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://101.43.58.178:8035/daily_target?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
 #        driver-class-name: com.mysql.jdbc.Driver
         driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis:

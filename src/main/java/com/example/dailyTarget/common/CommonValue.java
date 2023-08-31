@@ -35,5 +35,8 @@ public class CommonValue {
         WEEK_LIST.add("星期六");
         WEEK_LIST.add("星期天");
     }
-
+    
+    public static final String SUNDAY = "星期天";
+    
+    
 }

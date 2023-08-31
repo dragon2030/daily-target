@@ -3,6 +3,7 @@ package com.example.dailyTarget.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.dailyTarget.dto.DailyRecordDto;
 import com.example.dailyTarget.dto.EditDailyRecordDto;
+import com.example.dailyTarget.dto.ExportDataQuery;
 import com.example.dailyTarget.entity.DailyRecord;
 import com.example.dailyTarget.vo.DailyRecordVo;
 
@@ -26,4 +27,6 @@ public interface IDailyRecordService extends IService<DailyRecord> {
 
     //每日记录
     void dailyRecord(DailyRecordDto dailyRecordDto);
+    
+    void exportData(ExportDataQuery exportDataQuery);
 }

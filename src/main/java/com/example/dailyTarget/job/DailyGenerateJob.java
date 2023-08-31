@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
  * @Description:
  */
 
-//@Component
-//public class DailyGenerateJob {
-//    @Scheduled(cron ="0 0 1 * * ?")
-//    public void generateDailyRecord() {
-//        System.out.println("world");
-//    }
-//}
+@Component
+public class DailyGenerateJob {
+    @Scheduled(cron ="0 0 1 * * ?")
+    public void generateDailyRecord() {
+        System.out.println("world");
+    }
+}

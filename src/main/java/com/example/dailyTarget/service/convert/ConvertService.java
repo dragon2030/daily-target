@@ -1,5 +1,6 @@
 package com.example.dailyTarget.service.convert;
 
+import com.example.dailyTarget.dto.DailyRecordDto;
 import com.example.dailyTarget.entity.DailyRecord;
 import com.example.dailyTarget.enums.TargetEnum;
 
@@ -31,5 +32,12 @@ public interface ConvertService {
     String getStatisticsDate(Date date);
 
     ////获取第一快(运动目标)/第二块(学习目标)/第三块(作息目标)
-    String getPartTargetAchievement(DailyRecord originDateRecord, TargetEnum targetEnum);
+//    String getPartTargetAchievement(DailyRecord originDateRecord, TargetEnum targetEnum);
+//    String getPartTargetAchievement_new(String planTargetAchievement, TargetEnum targetEnum);
+    
+    
+//    String generatePlanTargetAchievement(DailyRecordDto dailyRecordDto, DailyRecord originDateRecord);
+    
+    //配合已经生成的json串，生成新的json串
+    String generateNewPlanTargetAchievement(DailyRecordDto queryDto,DailyRecord originDateRecord);
 }

@@ -1,9 +1,13 @@
 package com.example.dailyTarget.service.convert.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.example.dailyTarget.common.CommonValue;
+import com.example.dailyTarget.dto.DailyRecordDto;
 import com.example.dailyTarget.entity.DailyRecord;
 import com.example.dailyTarget.entity.PlanTarget;
+import com.example.dailyTarget.entity.TargetItemDto;
 import com.example.dailyTarget.enums.StatusEnum;
 import com.example.dailyTarget.enums.TargetEnum;
 import com.example.dailyTarget.mapper.PlanTargetMapper;
@@ -175,9 +179,9 @@ public class ConvertServiceImpl implements ConvertService {
         return statisticsDate;
     }
 
-    @Override
+//    @Override
     //获取第一快(运动目标)/第二块(学习目标)/第三块(作息目标)
-    public String getPartTargetAchievement(DailyRecord originDateRecord, TargetEnum targetEnum){
+    public String getPartTargetAchievement_old(DailyRecord originDateRecord, TargetEnum targetEnum){
         if(Objects.isNull(originDateRecord)){
             return "";
         }
@@ -214,4 +218,44 @@ public class ConvertServiceImpl implements ConvertService {
         }
         return returnTargetAchievement;
     }
+    
+    
+    //配合已经生成的json串，生成新的json串
+    @Override
+    public String generateNewPlanTargetAchievement(DailyRecordDto queryDto,DailyRecord originDateRecord){
+        String planTargetAchievement = "";
+        if(Objects.nonNull(originDateRecord)){
+            planTargetAchievement = originDateRecord.getPlanTargetAchievement();
+        }
+        TargetItemDto targetItemDto = JSONObject.parseObject(planTargetAchievement, TargetItemDto.class);
+        //目标完成情况 字段
+        JSONObject jsonObject = new JSONObject();
+        String sportTarget = "";
+        if (StringUtils.isNotBlank(queryDto.getSportTarget())) {
+            sportTarget = queryDto.getSportTarget();
+        }else if(targetItemDto!=null && StringUtils.isNotBlank(targetItemDto.getSportTarget())){//如果为null 把原本1、的内容添加进来
+            sportTarget = targetItemDto.getSportTarget(); 
+        }
+        jsonObject.put("sportTarget",sportTarget);
+    
+        String studyTarget = "";
+        if (StringUtils.isNotBlank(queryDto.getStudyTarget())) {
+            studyTarget = queryDto.getStudyTarget();
+        }else if(targetItemDto!=null && StringUtils.isNotBlank(targetItemDto.getStudyTarget())){//如果为null 把原本1、的内容添加进来
+            studyTarget = targetItemDto.getStudyTarget();
+        }
+        jsonObject.put("studyTarget",studyTarget);
+        
+        String sleepTarget = "";
+        if (StringUtils.isNotBlank(queryDto.getSleepTarget())) {
+            sleepTarget = queryDto.getSleepTarget();
+        }else if(targetItemDto!=null && StringUtils.isNotBlank(targetItemDto.getSleepTarget())){//如果为null 把原本1、的内容添加进来
+            sleepTarget = targetItemDto.getSleepTarget();
+        }
+        jsonObject.put("sleepTarget",sleepTarget);
+        
+        return JSON.toJSONString(jsonObject);
+    }
+    
+    
 }
